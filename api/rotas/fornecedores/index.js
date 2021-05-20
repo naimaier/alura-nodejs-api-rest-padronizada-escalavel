@@ -39,8 +39,25 @@ roteador.put('/:idFornecedor', async (request, response) => {
         const fornecedor = new Fornecedor(dados)
         await fornecedor.atualizar()
         response.end()
+
     } catch (erro) {
         response.json({ mensagem: erro.message })
+    }
+})
+
+roteador.delete('/:idFornecedor', async (request, response) => {
+    try {
+        const id = request.params.idFornecedor
+        const fornecedor = new Fornecedor({ id: id })
+
+        await fornecedor.carregar()
+        await fornecedor.remover()
+        response.end()
+
+    } catch (erro) {
+        response.json({
+            mensagem: erro.message
+        })
     }
 })
 
