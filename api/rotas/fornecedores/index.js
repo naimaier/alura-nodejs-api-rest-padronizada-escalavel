@@ -16,4 +16,18 @@ roteador.post('/', async (request, response) => {
     response.json(fornecedor)
 })
 
+roteador.get('/:idFornecedor', async (request, response) => {
+    try {
+        const id = request.params.idFornecedor
+        const fornecedor = new Fornecedor({ id: id })
+        await fornecedor.carregar()
+    
+        response.json(fornecedor)
+    } catch (erro) {
+        response.json({
+            mensagem: erro.message
+        })
+    }
+})
+
 module.exports = roteador
