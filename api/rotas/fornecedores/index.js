@@ -9,11 +9,17 @@ roteador.get('/', async (request, response) => {
 })
 
 roteador.post('/', async (request, response) => {
-    const dadosRecebidos = request.body
-    const fornecedor = new Fornecedor(dadosRecebidos)
-    await fornecedor.criar()
-    
-    response.json(fornecedor)
+    try {
+        const dadosRecebidos = request.body
+        const fornecedor = new Fornecedor(dadosRecebidos)
+        await fornecedor.criar()
+        
+        response.json(fornecedor)
+    } catch (erro) {
+        response.json({
+            mensagem: erro.message
+        })
+    }
 })
 
 roteador.get('/:idFornecedor', async (request, response) => {
