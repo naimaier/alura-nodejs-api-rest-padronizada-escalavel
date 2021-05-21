@@ -42,7 +42,7 @@ roteador.get('/:idFornecedor', async (request, response) => {
     }
 })
 
-roteador.put('/:idFornecedor', async (request, response) => {
+roteador.put('/:idFornecedor', async (request, response, proximo) => {
     try {
         const id = request.params.idFornecedor
         const dadosRecebidos = request.body
@@ -54,12 +54,7 @@ roteador.put('/:idFornecedor', async (request, response) => {
         response.end()
 
     } catch (erro) {
-        if (erro instanceof NaoEncontrado) {
-            response.status(404)
-        } else {
-            response.status(400)
-        }
-        response.json({ mensagem: erro.message })
+        proximo(erro)
     }
 })
 
