@@ -1,6 +1,7 @@
 const roteador = require('express').Router()
 const TabelaFornecedor = require('./TabelaFornecedor')
 const Fornecedor = require('./Fornecedor')
+const NaoEncontrado = require('../../erros/NaoEncontrado')
 
 roteador.get('/', async (request, response) => {
     const resultados = await TabelaFornecedor.listar()
@@ -53,7 +54,11 @@ roteador.put('/:idFornecedor', async (request, response) => {
         response.end()
 
     } catch (erro) {
-        response.status(400)
+        if (erro instanceof NaoEncontrado) {
+            response.status(404)
+        } else {
+            response.status(400)
+        }
         response.json({ mensagem: erro.message })
     }
 })
