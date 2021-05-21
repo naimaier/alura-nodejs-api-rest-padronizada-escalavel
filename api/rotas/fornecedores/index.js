@@ -1,7 +1,6 @@
 const roteador = require('express').Router()
 const TabelaFornecedor = require('./TabelaFornecedor')
 const Fornecedor = require('./Fornecedor')
-const NaoEncontrado = require('../../erros/NaoEncontrado')
 
 roteador.get('/', async (request, response) => {
     const resultados = await TabelaFornecedor.listar()
@@ -10,7 +9,7 @@ roteador.get('/', async (request, response) => {
     response.json(resultados)
 })
 
-roteador.post('/', async (request, response) => {
+roteador.post('/', async (request, response, proximo) => {
     try {
         const dadosRecebidos = request.body
         const fornecedor = new Fornecedor(dadosRecebidos)
@@ -19,14 +18,11 @@ roteador.post('/', async (request, response) => {
         response.status(201)
         response.json(fornecedor)
     } catch (erro) {
-        response.status(400)
-        response.json({
-            mensagem: erro.message
-        })
+        proximo(erro)
     }
 })
 
-roteador.get('/:idFornecedor', async (request, response) => {
+roteador.get('/:idFornecedor', async (request, response, proximo) => {
     try {
         const id = request.params.idFornecedor
         const fornecedor = new Fornecedor({ id: id })
@@ -35,10 +31,7 @@ roteador.get('/:idFornecedor', async (request, response) => {
         response.status(200)
         response.json(fornecedor)
     } catch (erro) {
-        response.status(404)
-        response.json({
-            mensagem: erro.message
-        })
+        proximo(erro)
     }
 })
 
@@ -58,7 +51,7 @@ roteador.put('/:idFornecedor', async (request, response, proximo) => {
     }
 })
 
-roteador.delete('/:idFornecedor', async (request, response) => {
+roteador.delete('/:idFornecedor', async (request, response, proximo) => {
     try {
         const id = request.params.idFornecedor
         const fornecedor = new Fornecedor({ id: id })
@@ -69,10 +62,7 @@ roteador.delete('/:idFornecedor', async (request, response) => {
         response.end()
 
     } catch (erro) {
-        response.status(404)
-        response.json({
-            mensagem: erro.message
-        })
+        proximo(erro)
     }
 })
 
