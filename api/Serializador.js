@@ -39,10 +39,12 @@ class Serializador {
 }
 
 class SerializadorFornecedor extends Serializador {
-    constructor(contentType) {
+    constructor(contentType, camposExtras) {
         super()
         this.contentType = contentType
-        this.camposPublicos = ['id', 'empresa', 'categoria']
+        this.camposPublicos = ['id', 'empresa', 'categoria'].concat(camposExtras || [])
+        // Vamos juntar os campos extras aos já selecionados
+        // Usamos o 'ou lista vazia' para caso de campos extras ser undefined
     }
 }
 
