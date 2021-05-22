@@ -7,6 +7,7 @@ const CampoInvalido = require('./erros/CampoInvalido')
 const DadosNaoFornecidos = require('./erros/DadosNaoFornecidos')
 const ValorNaoSuportado = require('./erros/ValorNaoSuportado')
 const formatosAceitos = require('./Serializador').formatosAceitos
+const SerializadorErro = require('./Serializador').SerializadorErro
 
 app.use(bodyParser.json())
 
@@ -50,8 +51,16 @@ app.use((erro, request, response, proximo) => {
         status = 406
     }
 
+    const serializador = new SerializadorErro(
+        response.getHeader('Content-Type')
+    )
     response.status(status)
-    response.json({ mensagem: erro.message })
+    response.send(
+        serializador.serializar({ 
+            mensagem: erro.message,
+            id: erro.idErro
+        })
+    )
 })
 
 app.listen(config.get("api.porta"), () => console.log('API rodando!'))
